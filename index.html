@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CampusHub — Academic Spaces</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">CampusHub</div>
+    <div class="searchbar">
+      <input id="globalSearch" type="search" placeholder="Search courses, assignments, notices..." aria-label="Search" />
+      <button id="searchBtn" aria-label="Search">Search</button>
+    </div>
+    <div class="user-menu">
+      <button id="toggleRole" class="role-btn" aria-label="Toggle role">Student</button>
+      <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?s=40&v=4" alt="Profile avatar" />
+    </div>
+  </header>
+
+  <main class="layout">
+    <nav class="sidebar" aria-label="Primary">
+      <div class="sidebar-section">
+        <h3>Spaces</h3>
+        <ul id="courseList" class="course-list"></ul>
+        <button id="addCourseBtn" class="primary-outline">+ Create space</button>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Tags</h3>
+        <div id="tagCloud" class="tag-cloud"></div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Quick actions</h3>
+        <div class="quick-actions">
+          <button class="qa-btn" data-action="newAssignment">New assignment</button>
+          <button class="qa-btn" data-action="newNotice">New notice</button>
+          <button class="qa-btn" data-action="newEvent">New event</button>
+        </div>
+      </div>
+    </nav>
+
+    <section class="content">
+      <div class="tabs">
+        <button class="tab active" data-tab="dashboard">Dashboard</button>
+        <button class="tab" data-tab="assignments">Assignments</button>
+        <button class="tab" data-tab="notices">Notices</button>
+        <button class="tab" data-tab="faculty">Faculty</button>
+        <button class="tab" data-tab="calendar">Calendar</button>
+        <button class="tab" data-tab="ai">AI Assistant</button>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="panel active" id="dashboardPanel">
+        <div class="panel-grid">
+          <section class="card">
+            <h2>Overview</h2>
+            <div id="overviewStats" class="stats"></div>
+          </section>
+
+          <section class="card">
+            <h2>Upcoming deadlines</h2>
+            <ul id="upcomingDeadlines" class="list"></ul>
+          </section>
+
+          <section class="card">
+            <h2>Recent notices</h2>
+            <ul id="recentNotices" class="list"></ul>
+          </section>
+
+          <section class="card">
+            <h2>Smart reminders</h2>
+            <ul id="smartReminders" class="list"></ul>
+          </section>
+        </div>
+      </div>
+
+      <!-- Assignments -->
+      <div class="panel" id="assignmentsPanel">
+        <section class="panel-header">
+          <h2>Assignments</h2>
+          <div class="panel-actions">
+            <button id="newAssignmentBtn" class="primary">+ Add</button>
+            <select id="assignmentFilter" aria-label="Filter assignments">
+              <option value="all">All</option>
+              <option value="pending">Pending</option>
+              <option value="submitted">Submitted</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+        </section>
+        <div id="assignmentList" class="cards"></div>
+      </div>
+
+      <!-- Notices -->
+      <div class="panel" id="noticesPanel">
+        <section class="panel-header">
+          <h2>Notice board</h2>
+          <button id="newNoticeBtn" class="primary">+ Post notice</button>
+        </section>
+        <div id="noticeList" class="timeline"></div>
+      </div>
+
+      <!-- Faculty -->
+      <div class="panel" id="facultyPanel">
+        <section class="panel-header">
+          <h2>Faculty directory</h2>
+        </section>
+        <div id="facultyList" class="cards grid-3"></div>
+      </div>
+
+      <!-- Calendar -->
+      <div class="panel" id="calendarPanel">
+        <section class="panel-header">
+          <h2>Calendar</h2>
+          <div class="panel-actions">
+            <button id="newEventBtn" class="primary">+ Add event</button>
+          </div>
+        </section>
+        <div class="calendar">
+          <div class="calendar-header">
+            <button id="prevMonthBtn" aria-label="Previous month">‹</button>
+            <div id="calendarMonth" class="month-label"></div>
+            <button id="nextMonthBtn" aria-label="Next month">›</button>
+          </div>
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </div>
+      </div>
+
+      <!-- AI Assistant -->
+      <div class="panel" id="aiPanel">
+        <div class="ai-layout">
+          <section class="card">
+            <h2>AI summaries</h2>
+            <div class="ai-summarizer">
+              <textarea id="summaryInput" rows="5" placeholder="Paste course material, notes, or a long message..."></textarea>
+              <div class="row">
+                <select id="summaryStyle">
+                  <option value="bullet">Bulleted key points</option>
+                  <option value="tl;dr">TL;DR</option>
+                  <option value="study">Study outline</option>
+                </select>
+                <button id="summarizeBtn" class="primary">Summarize</button>
+              </div>
+              <div id="summaryOutput" class="summary-output"></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Chatbot assistance</h2>
+            <div class="chatbot">
+              <div id="chatLog" class="chat-log" aria-live="polite"></div>
+              <div class="chat-input">
+                <input id="chatQuery" type="text" placeholder="Ask about deadlines, spaces, or commands..." />
+                <button id="chatSendBtn" class="primary">Send</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modals -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">New item</h3>
+        <button id="modalClose" aria-label="Close">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+      <div class="modal-footer">
+        <button id="modalCancel" class="secondary">Cancel</button>
+        <button id="modalSave" class="primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div>© CampusHub Prototype</div>
+    <div class="footer-links">
+      <a href="#" aria-label="Help">Help</a>
+      <a href="#" aria-label="Privacy">Privacy</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
